@@ -21,16 +21,19 @@ endif()
 set(CRISP_EMBED_ROOT ${CMAKE_SOURCE_DIR}/external/CrispEmbed)
 
 if(NOT EXISTS ${CRISP_EMBED_ROOT}/CMakeLists.txt)
-    message(FATAL_ERROR "CrispEmbed source not found at ${CRISP_EMBED_ROOT}. Did you clone submodules?")
+    message(FATAL_ERROR "CrispEmbed source not found at ${CRISP_EMBED_ROOT}. Run ./setup.sh first.")
 endif()
 
-# This compiles crispembed and its internal ggml components automatically
 add_subdirectory(${CRISP_EMBED_ROOT} EXCLUDE_FROM_ALL)
 
 # -----------------------------
 # nlohmann/json
 # -----------------------------
 set(JSON_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/lib/json)
+
+if(NOT EXISTS ${JSON_INCLUDE_DIR}/json.hpp)
+    message(FATAL_ERROR "nlohmann/json not found at ${JSON_INCLUDE_DIR}/json.hpp")
+endif()
 
 # -----------------------------
 # Library target
@@ -44,7 +47,7 @@ add_library(HestiaLib ${HESTIA_SOURCES})
 target_include_directories(HestiaLib PUBLIC 
     ${PROJECT_SOURCE_DIR}/include
     ${JSON_INCLUDE_DIR}
-    ${CRISP_EMBED_ROOT}/include
+    ${CRISP_EMBED_ROOT}/src
 )
 
 # -----------------------------
@@ -55,7 +58,7 @@ add_executable(Hestia main.cpp)
 target_include_directories(Hestia PRIVATE
     ${JSON_INCLUDE_DIR}
     ${PROJECT_SOURCE_DIR}/include
-    ${CRISP_EMBED_ROOT}/include
+    ${CRISP_EMBED_ROOT}/src
 )
 
 target_link_libraries(Hestia PRIVATE 

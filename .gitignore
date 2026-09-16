@@ -82,5 +82,6 @@ models/
 lib/
 .venv/
 .vscode/
+.clangd
 external/
 

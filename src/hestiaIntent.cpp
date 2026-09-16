@@ -1,6 +1,6 @@
 #include "../include/hestiaIntent.hpp"
-#include "../include/crispembed.h"
-#include "../lib/json/json.hpp"
+#include "crispembed.h"
+#include "json.hpp"
 #include <iostream>
 #include <fstream>
 #include <vector>
