@@ -1,7 +1,4 @@
 #!/bin/bash
-# Hestia Setup Script
-# Builds CrispEmbed and whisper.cpp. Creates intent_mapping.json.
-# Models and llama.cpp are handled later — see instructions at the end.
 
 # Hestia Setup Script
 # Builds CrispEmbed and whisper.cpp. Others will follow at later versions
@@ -16,6 +13,28 @@ PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 EXTERNAL_DIR="$PROJECT_ROOT/external"
 MODELS_DIR="$PROJECT_ROOT/models"
 LIB_DIR="$PROJECT_ROOT/lib"
+
+# -----------------------------
+# miniaudio
+# -----------------------------
+download_miniaudio() {
+    log "Downloading miniaudio..."
+    cd "$EXTERNAL_DIR"
+
+    if [ ! -d "miniaudio" ]; then
+        mkdir miniaudio-repo 
+        git clone --depth 1 https://github.com/mackron/miniaudio.git miniaudio-repo
+        mkdir miniaudio
+        cp miniaudio-repo/miniaudio.c miniaudio/
+        cp miniaudio-repo/miniaudio.h miniaudio/
+        rm -rf miniaudio-repo
+        log "Downloaded miniaudio.c and miniaudio.h."
+    else
+        log "miniaudio present, skipping"
+    fi
+
+    
+}
 
 # Colors
 RED='\033[0;31m'
@@ -141,6 +160,7 @@ EOF
 # Run
 # -----------------------------
 log "Starting Hestia setup..."
+download_miniaudio
 build_crispembed
 build_whisper
 create_intent_mapping
