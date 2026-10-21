@@ -5,7 +5,7 @@
 namespace hestiaAudio {
     static ma_device g_device;
     static AudioCallback g_callback;
-    static bool g_intialized = false;
+    static bool g_initialized = false;
 
     void data_callback(ma_device *pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount) {
         if (g_callback)
@@ -30,7 +30,7 @@ namespace hestiaAudio {
             return false;
         }
 
-        g_intialized = true;
+        g_initialized = true;
         return true;
     }
 
@@ -40,14 +40,14 @@ namespace hestiaAudio {
     }
 
     void start() { 
-        if (g_intialized && ma_device_start(&g_device) != MA_SUCCESS)
+        if (g_initialized && ma_device_start(&g_device) != MA_SUCCESS)
             printf("[Audio] Failed to start device.\n");
     }
 
     void shutdown() {
-        if (g_intialized) {
+        if (g_initialized) {
             ma_device_uninit(&g_device);
-            g_intialized = false;
+            g_initialized = false;
         }
     }
 
