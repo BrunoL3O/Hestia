@@ -14,28 +14,6 @@ EXTERNAL_DIR="$PROJECT_ROOT/external"
 MODELS_DIR="$PROJECT_ROOT/models"
 LIB_DIR="$PROJECT_ROOT/lib"
 
-# -----------------------------
-# miniaudio
-# -----------------------------
-download_miniaudio() {
-    log "Downloading miniaudio..."
-    cd "$EXTERNAL_DIR"
-
-    if [ ! -d "miniaudio" ]; then
-        mkdir miniaudio-repo 
-        git clone --depth 1 https://github.com/mackron/miniaudio.git miniaudio-repo
-        mkdir miniaudio
-        cp miniaudio-repo/miniaudio.c miniaudio/
-        cp miniaudio-repo/miniaudio.h miniaudio/
-        rm -rf miniaudio-repo
-        log "Downloaded miniaudio.c and miniaudio.h."
-    else
-        log "miniaudio present, skipping"
-    fi
-
-    
-}
-
 # Colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -119,6 +97,56 @@ build_whisper() {
     cp build/libwhisper.a "$LIB_DIR/libwhisper.a"
     log "whisper.cpp built and copied to lib/."
 }
+
+# -----------------------------
+# miniaudio
+# -----------------------------
+download_miniaudio() {
+    log "Downloading miniaudio..."
+    cd "$EXTERNAL_DIR"
+
+    if [ ! -d "miniaudio" ]; then
+        mkdir miniaudio-repo 
+        git clone --depth 1 https://github.com/mackron/miniaudio.git miniaudio-repo
+        mkdir miniaudio
+        cp miniaudio-repo/miniaudio.c miniaudio/
+        cp miniaudio-repo/miniaudio.h miniaudio/
+        rm -rf miniaudio-repo
+        log "Downloaded miniaudio.c and miniaudio.h."
+    else
+        log "miniaudio present, skipping"
+    fi
+
+    
+}
+
+# -----------------------------
+# sherpa-onnx (CPU)
+# -----------------------------
+
+build_sherpa_onnx() {
+    log "Building sherpa-onnx..."
+    cd "$EXTERNAL_DIR"
+
+    if [ ! -d "sherpa-onnx" ]; then
+        git clone --recursive https://github.com/k2-fsa/sherpa-onnx
+    else
+        log "sherpa-onnx already cloned, updating..."
+        cd sherpa-onnx
+        git pull
+        git submodule update --init --recursive
+        cd ..
+    fi
+
+    cd sherpa-onnx
+    mkdir build
+    cd build
+    
+    # Static, as per sherpa-onnx documentation
+    cmake -DCMAKE_BUILD_TYPE=Release ..
+    make -j "$(nproc)"
+}
+ 
 
 # -----------------------------
 # Create intent_mapping.json

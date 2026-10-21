@@ -13,4 +13,5 @@ The scope of this project is to provide a Siri-like experience that you have com
 Many thanks go out to :  
 - CrispStrobe, for making a simple to use yet effective text retrieval & analysis (and much more!) tool,
 - the folks over at ggml-org, for both whisper.cpp and llama.cpp,
+- the folks over at k2-fsa, for sherpa-onnx,
 - mackron and the miniaudio contributors, for such great software dedicated to the public domain. <3
